@@ -1,0 +1,82 @@
+.layui-form-select-multiple {}
+
+.layui-form-select.layui-input {
+	height: auto;
+	min-height: 38px;
+}
+
+.layui-form-select-options {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+}
+
+.layui-form-select-input input {
+	color: #FFF;
+}
+
+.layui-form-select-panel-opened .layui-edge {
+  margin-top: -9px;
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+.layui-form-select-search {
+	padding: 5px;
+}
+
+.layui-form-select-placehoder {
+	position: absolute;
+	top: 0px;
+	left: 8px;
+	height: 38px;
+line-height: 38px;
+}
+
+.layui-form-select-selection-item{
+	position: relative;
+	flex: none;
+	box-sizing: border-box;
+	max-width: 100%;
+	height: 30px;
+	line-height: 28px;
+	background: rgba(0, 0, 0, 0.06);
+	border: 1px solid rgba(5, 5, 5, 0.06);
+	border-radius: 2px;
+	cursor: default;
+	user-select: none;
+	margin-inline-end: 4px;
+	padding-inline-start: 8px;
+	padding-inline-end: 8px;
+}
+
+.layui-form-select-selection-item-content {
+	display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.layui-form-select-item-remove {
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+.layui-form-select-item-remove:hover {
+	cursor: pointer;
+	color: #000;
+}
+
+.layui-form-select-dropdown-item .layui-icon-ok {
+	display: none;
+	float: right;
+}
+
+.layui-form-select-dropdown-selected {
+	color: #409eff;
+}
+
+.layui-form-select-dropdown-selected .layui-icon-ok {
+	display: inherit;
+}
