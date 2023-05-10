@@ -1,5 +1,8 @@
-# layui-select-multiple
+## 介绍
 
+layui2.8，select多选，支持搜索
+
+## 使用示例
 ```
 <div class="layui-container">
   <form class="layui-form">
@@ -15,6 +18,14 @@
 </div>
 ```
 ```
+layui.config({
+  // 模块地址
+  base: '/test/layui/'
+}).extend({
+  // 定义模块路径
+  select: 'select'
+});
+  
 layui.use(['select', 'form'], function(){
   const select = layui.select;
   const form = layui.form;
@@ -58,3 +69,7 @@ layui.use(['select', 'form'], function(){
   });
 });
 ```
+
+## 示例图
+![image](https://github.com/lanrenbulan/layui-select-multiple/assets/9604624/a40a1233-19a1-45b2-8908-db119b139bdf)
+
