@@ -7,8 +7,7 @@
 
 .layui-form-select-options {
 	position: absolute;
-	top: 4px;
-	left: 4px;
+	padding: 4px;
 }
 
 .layui-form-select-input input {
