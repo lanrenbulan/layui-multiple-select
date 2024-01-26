@@ -400,13 +400,10 @@ layui.define(['jquery', 'dropdown'],function(exports){
   };
 
   Class.prototype.getSelectedOptions = function() {
-    var that = this;
-
-    return that.context.selectedIds.map(function(id) {
-      return that.getOptionById(id);
+    return this.getAllOptions().filter(function(option) {
+      return option.selected;
     });
   };
-
 
   //核心入口
   select.render = function(options){
