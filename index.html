@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link href="//unpkg.com/layui@2.9.4/dist/css/layui.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="select.css">
+</head>
+<body>
+
+<div class="layui-container" style="width: 500px">
+	<form class="layui-form">
+	  	<div class="layui-form-item">
+		    <label class="layui-form-label">城市</label>
+		    <div class="layui-input-block">
+	    		<input id="multi-select1" name="cities1" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+		    <label class="layui-form-label">城市</label>
+		    <div class="layui-input-block">
+		    	<div class="layui-input-group" style="width 100%;">
+	    		 	<div class="layui-input-split layui-input-prefix">
+			        	前缀前缀
+			      	</div>
+		    		<input id="multi-select2"  name="cities2" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+		    		<div class="layui-input-split layui-input-suffix">
+				        后缀
+			      	</div>
+		    	</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+		    <label class="layui-form-label">城市</label>
+		    <div class="layui-input-block">
+	    		<input id="multi-select3" name="cities3" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+		    <label class="layui-form-label">城市</label>
+		    <div class="layui-input-block">
+	    		<input id="multi-select4" name="cities4" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+			</div>
+		</div>
+
+		<button class="layui-btn" lay-submit lay-filter="demo-verify">提交</button>
+		<button class="layui-btn" type="button" id="reload">重载</button>
+	</form>
+
+	<input id="multi-select5" name="cities5" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+</div>
+
+<script src="//unpkg.com/layui@2.9.4/dist/layui.js"></script>
+
+<script>
+	layui.config({
+	  base: '/test/layui/'
+	}).extend({
+	  select: 'select'
+	});
+	layui.use(['select', 'form'], function(){
+  	const select = layui.select;
+  	const form = layui.form;
+  	const $ = layui.$;
+
+  	var selected = true;
+
+  	for(let i = 1; i <= 3; i++) {
+	  	select.render({
+	  		elem: '#multi-select' + i,
+	  		keywordPlaceholder: '关键词',
+	  		unfilteredText: '没有匹配的选项',
+	  		collapseSelected: true,
+	  		options: [
+	  			{id: 1,title: '北京', selected: selected},
+	  			{id: 2,title: '上海', selected: selected},
+	  			{id: 3,title: '湖北', selected: selected},
+	  			{id: 4,title: '湖南', selected: selected},
+	  			{id: 5,title: '河北', selected: selected},
+	  			{id: 6,title: '山西', selected: selected},
+	  			{id: 7,title: '内蒙古', selected: selected},
+	  			{id: 8,title: '西藏', selected: selected},
+	  			{id: 9,title: '台湾', selected: selected},
+	  			{id: 10,title: '新疆', selected: selected},
+	  			{id: 11,title: '天津', selected: selected},
+	  			{id: 12,title: '山东', selected: selected},
+	  			{id: 13,title: '浙江'},
+	  			{id: 14,title: '福建'},
+	  			{id: 15,title: '广西'},
+	  			{id: 16,title: '贵州'},
+	  			{id: 17,title: '四川'},
+	  		],
+	  	});
+	  }
+
+	  select.render({
+	  		elem: '#multi-select4',
+	  		keywordPlaceholder: '关键词',
+	  		unfilteredText: '没有匹配的选项',
+	  		options: [
+	  			{id: 1,title: '北京', selected: false},
+	  			{id: 2,title: '上海', selected: selected},
+	  			{id: 3,title: '湖北', selected: false},
+	  			{id: 4,title: '湖南', selected: selected},
+	  			{id: 5,title: '河北', selected: false},
+	  			{id: 6,title: '山西', selected: selected},
+	  			{id: 7,title: '内蒙古', selected: false},
+	  			{id: 8,title: '西藏', selected: selected},
+	  			{id: 9,title: '台湾', selected: false},
+	  			{id: 10,title: '新疆', selected: false},
+	  			{id: 11,title: '天津', selected: false},
+	  			{id: 12,title: '山东', selected: false},
+	  			{id: 13,title: '浙江'},
+	  			{id: 14,title: '福建'},
+	  			{id: 15,title: '广西'},
+	  			{id: 16,title: '贵州'},
+	  			{id: 17,title: '四川'},
+	  		],
+	  	});
+
+	  const select5 = select.render({
+	  		elem: '#multi-select5',
+	  		keywordPlaceholder: '关键词',
+	  		unfilteredText: '没有匹配的选项',
+	  		options: [
+	  			{id: 1,title: '北京', selected: false},
+	  			{id: 2,title: '上海', selected: selected},
+	  			{id: 3,title: '湖北', selected: false},
+	  			{id: 4,title: '湖南', selected: selected},
+	  			{id: 5,title: '河北', selected: false},
+	  			{id: 6,title: '山西', selected: selected},
+	  			{id: 7,title: '内蒙古', selected: false},
+	  			{id: 8,title: '西藏', selected: selected},
+	  			{id: 9,title: '台湾', selected: false},
+	  			{id: 10,title: '新疆', selected: false},
+	  			{id: 11,title: '天津', selected: false},
+	  			{id: 12,title: '山东', selected: false},
+	  			{id: 13,title: '浙江'},
+	  			{id: 14,title: '福建'},
+	  			{id: 15,title: '广西'},
+	  			{id: 16,title: '贵州'},
+	  			{id: 17,title: '四川'},
+	  		],
+	  	});
+
+
+  	$('#reload').click(function() {
+  		select5.reload({
+  			options: [{id: 1,title: '北京'}, {id: 2,title: '上海'}, {id: 3,title: '湖北'}, {id: 4,title: '湖南'}],
+  		});
+  		select5.val('1,4')
+  	});
+
+  	 // 提交事件
+	form.on('submit(demo-verify)', function(data){
+	  var field = data.field; // 获取表单字段值
+	  // 显示填写结果，仅作演示用
+	  layer.alert(JSON.stringify(field), {
+	    title: '当前填写的字段值'
+	  });
+	  // 此处可执行 Ajax 等操作
+	  // …
+	  return false; // 阻止默认 form 跳转
+	});
+	});
+</script>
+</body>
+</html>
