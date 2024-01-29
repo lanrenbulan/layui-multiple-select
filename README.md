@@ -6,4 +6,4 @@ layui2.8+，支持多选、搜索、新增选项
 
 见index.html
 
-https://lanrenbulan.github.io/layui-select-multiple/
+https://lanrenbulan.github.io/layui-multiple-select/
