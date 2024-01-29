@@ -19,6 +19,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
         selected: 'selected',
       },
       options: [],
+      allowCreate: true,
       collapseSelected: false,
     }
   };
@@ -60,7 +61,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
   var Class = function(config) {
     var that = this;
-    
+
     that.config = $.extend({}, that.config, select.config, config);
 
     that.config.elem = $(config.elem);
@@ -73,14 +74,14 @@ layui.define(['jquery', 'dropdown'],function(exports){
       height: '100%'
     });
 
-    let width = that.config.elem.parent().outerWidth();
+    var width = that.config.elem.parent().outerWidth();
 
-    const layuiInputBlock = that.config.elem.parents('.layui-input-block');
+    var layuiInputBlock = that.config.elem.parents('.layui-input-block');
     if (layuiInputBlock.length > 0) {
       width = layuiInputBlock.width();
     }
 
-    const layuiInputGroup = that.config.elem.parents('.layui-input-group');
+    var layuiInputGroup = that.config.elem.parents('.layui-input-group');
     if (layuiInputGroup.length > 0) {
       width -= layuiInputGroup.width();
     }
@@ -118,6 +119,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
       }).map(function(option) {
         return option.id
       }),
+      options: JSON.parse(JSON.stringify(config.options)),
       // dropdown滚动条的位置
       dropdownMenuScrollTop: 0,
     };
@@ -133,7 +135,8 @@ layui.define(['jquery', 'dropdown'],function(exports){
     // 移除选项
     config.elem.parent().on('click', '.multiple-select-selection-item-remove', function(e) {
       e.stopPropagation();
-      var id = that.context.selectedIds[$(this).parent().index()],
+
+      var id = $(this).parent().data('id'),
           option = that.getOptionById(id);
 
       that.remove(option);
@@ -151,7 +154,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
   // 移除选项
   Class.prototype.remove = function(option) {
-    this.context.selectedIds = this.context.selectedIds.filter(id => id != option.id);
+    this.context.selectedIds = this.context.selectedIds.filter(function(id) { return id != option.id; });
     this.reloadDropdownData(this.buildRenderOptions());
   };
 
@@ -169,6 +172,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
     this.context.keyword = '';
 
     var input = this.getSearchInput();
+    
     input && input.val('');
   };
 
@@ -216,7 +220,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
   Class.prototype.getAllOptions = function() {
     var that = this;
 
-    return that.config.options.map(function(item) {
+    return that.context.options.map(function(item) {
       return {
         id: item.id,
         title: item.title,
@@ -225,7 +229,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
     });
   };
 
-  
+
   Class.prototype.buildDropdownContent = function(options) {
     return [
         `<div class="multiple-select-search"><input class="layui-input" placeholder="${this.config.keywordPlaceholder}"/></div>`,
@@ -282,8 +286,18 @@ layui.define(['jquery', 'dropdown'],function(exports){
             searchInput = that.getSearchInput();
 
         function reloadDropdown(keyword) {
+          var filterOptions = that.filterOptions(keyword);
+
+          // 当没有符合条件的项且允许创建时
+          if (filterOptions.length === 0 && that.config.allowCreate) {
+            filterOptions.push({
+              [that.config.customName.id]: keyword,
+              [that.config.customName.title]: keyword,
+            });
+          }
+
           that.context.keyword = keyword;
-          that.context.filteredOptions = that.filterOptions(keyword);
+          that.context.filteredOptions = filterOptions;
           that.reloadDropdownData(that.context.filteredOptions);
         }
 
@@ -329,7 +343,17 @@ layui.define(['jquery', 'dropdown'],function(exports){
             ;
 
         if (!option) {
-          return ;
+          if (!that.config.allowCreate) {
+            return ;
+          }
+
+          option = {
+            [that.config.customName.id]: value,
+            [that.config.customName.title]: value,
+            [that.config.customName.selected]: true,
+          }
+
+          that.context.options.push(option);
         }
 
         // 记录选择面板滚动的位置
