@@ -10,8 +10,10 @@ layui.define(['jquery', 'dropdown'],function(exports){
   var select = {
     // 默认配置
     config: {
+      // 值分隔符
       valueSeparator: ',',
       keywordPlaceholder: '请输入关键词',
+      // 搜索时，没有匹配结果时显示的文字
       unfilteredText: '没有匹配的选项',
       customName: {
         id: 'id',
@@ -19,30 +21,33 @@ layui.define(['jquery', 'dropdown'],function(exports){
         selected: 'selected',
       },
       options: [],
+      // 搜索时，如果不能匹配时，是否允许新增
       allowCreate: true,
+      // 是否折叠已选择的选项
       collapseSelected: false,
     }
   };
 
   var thisSelect = function(){
-    var that = this
-    ,config = that.config;
+    var that = this;
     
     return {
-      config: config
-      ,reload: function(config){
+      config: that.config,
+
+      // 重载
+      reload: function(config){
         that.reload.call(that, config);
       },
 
       // 获取值或设置值
       val: function(value) {
-        if (!value) {
-          return that.context.selectedIds.join(config.valueSeparator);
+        if (value === undefined) {
+          return that.context.selectedIds.join(that.config.valueSeparator);
         }
 
-        that.clear.call(that);
+        that.clear();
 
-        var ids = $.isArray(value) ? value : value.split(config.valueSeparator);
+        var ids = $.isArray(value) ? value : value.split(that.config.valueSeparator);
 
         for (var i = 0; i < ids.length; i++) {
           var option = that.getOptionById(ids[i]);
@@ -50,9 +55,11 @@ layui.define(['jquery', 'dropdown'],function(exports){
             continue;
           }
 
-          that.select(option)
+          that.select(option);
         }
       },
+
+      // 清空
       clear: function() {
         that.clear.call(that);
       }
@@ -96,10 +103,9 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
   Class.prototype.render = function() {
     var that = this;
-    var config = that.config;
 
-    // 根据`config.customName`标准化
-    config.options = config.options.map(function(option) {
+    // 初始化选项
+    var initOptions = that.config.options.map(function(option) {
       return {
         id: option[that.config.customName.id],
         title: option[that.config.customName.title],
@@ -107,40 +113,39 @@ layui.define(['jquery', 'dropdown'],function(exports){
       };
     });
 
-    // 上下文
-    this.context = {
-      // 搜索关键词
-      keyword: '',
-      // 满足搜索关键词的选项
-      filteredOptions: null,
-      // 已选择的ID
-      selectedIds: that.config.options.filter(function(option) {
-        return option.selected;
-      }).map(function(option) {
-        return option.id
-      }),
-      options: JSON.parse(JSON.stringify(config.options)),
-      // dropdown滚动条的位置
-      dropdownMenuScrollTop: 0,
-    };
-
-    // 赋值
-    config.elem.val(this.context.selectedIds.join(config.valueSeparator));
-
-    // 因为样式层级问题，这里click相当于
-    config.elem.parent().on('click', '.multiple-select-selection', function() {
-      that.config.elem.click();
+    // 已选择的ID
+    var selectedIds = initOptions.filter(function(option) {
+      return option.selected;
+    }).map(function(option) {
+      return option.id
     });
 
+
+    // 赋值
+    that.config.elem.val(selectedIds.join(that.config.valueSeparator));
+
     // 移除选项
-    config.elem.parent().on('click', '.multiple-select-selection-item-remove', function(e) {
+    that.config.elem.parent().on('click', '.multiple-select-selection-item-remove', function(e) {
       e.stopPropagation();
 
-      var id = $(this).parent().data('id'),
-          option = that.getOptionById(id);
+      var id = $(this).parent().data('id');
+      var option = that.getOptionById(id);
 
       that.remove(option);
     });
+
+    // 上下文
+    that.context = {
+      // 搜索关键词
+      keyword: '',
+      // 满足搜索关键词的选项，null表示没有搜索
+      filteredOptions: null,
+      // 已选择的ID
+      selectedIds: selectedIds,
+      options: initOptions,
+      // dropdown滚动条的位置
+      dropdownMenuScrollTop: 0,
+    };
 
     that.renderDropdown();
     that.renderSelection();
@@ -158,13 +163,23 @@ layui.define(['jquery', 'dropdown'],function(exports){
     this.reloadDropdownData(this.buildRenderOptions());
   };
 
-
   // 选择选项
-  Class.prototype.select = function(option) {
-    this.context.selectedIds.push(option.id);
+  Class.prototype.select = function(options) {
+    options = layui.isArray(options) ? options : [options];
+
+    var length = options.length;
+
+    for (var i = 0; i < length; i++) {
+      var id = options[i].id;
+      if (this.context.selectedIds.indexOf(id) !== -1) {
+        continue;
+      }
+
+      this.context.selectedIds.push(id);
+    }
+
     this.reloadDropdownData(this.buildRenderOptions());
   };
-
 
   // 重置搜索
   Class.prototype.resetSearch = function() {
@@ -229,18 +244,16 @@ layui.define(['jquery', 'dropdown'],function(exports){
     });
   };
 
-
   Class.prototype.buildDropdownContent = function(options) {
     return [
-        `<div class="multiple-select-search"><input class="layui-input" placeholder="${this.config.keywordPlaceholder}"/></div>`,
-        '<ul class="layui-menu layui-dropdown-menu" style="max-height: 300px;overflow-y: auto;">',
-        options.length > 0 ? options.map(function(option) {
-          return `<li data-value="${option.id}" class="multiple-select-option ${option.selected ? 'multiple-select-option-selected' : ''}">${option.title}</li>`;
-        }).join('') : `<div style="padding: 5px;font-size:12px;">${this.config.unfilteredText}</div>`,
-        '</ul>',
-      ].join('');
+      `<div class="multiple-select-search"><input class="layui-input" placeholder="${this.config.keywordPlaceholder}"/></div>`,
+      '<ul class="layui-menu layui-dropdown-menu" style="max-height: 300px;overflow-y: auto;">',
+      options.length > 0 ? options.map(function(option) {
+        return `<li data-value="${option.id}" class="multiple-select-option ${option.selected ? 'multiple-select-option-selected' : ''}">${option.title}</li>`;
+      }).join('') : `<div style="padding: 5px;font-size:12px;">${this.config.unfilteredText}</div>`,
+      '</ul>',
+    ].join('');
   };
-
 
   Class.prototype.reloadDropdownData = function(options) {
     if (options && options.length === this.getAllOptions().length) {
@@ -264,18 +277,17 @@ layui.define(['jquery', 'dropdown'],function(exports){
     return this.panel.find('div.multiple-select-search > input');
   };
 
-
   Class.prototype.renderDropdown = function() {
     var that = this;
 
     that.dropdown = dropdown.render({
-      elem: that.config.elem,
+      elem: that.config.elem.parent(),
       style: 'width:' + that.config.elem.outerWidth() + 'px',
       content: that.buildDropdownContent(that.getAllOptions()),
       ready: function(panel, elem) {
         that.panel = panel;
 
-        elem.parent().addClass('multiple-select-panel-opended')
+        elem.addClass('multiple-select-panel-opended')
 
         // 保持滚动条位置
         if (that.context.dropdownMenuScrollTop > 0) {
@@ -331,7 +343,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
             that.context.filteredOptions = null;
             that.reloadDropdownData();
 
-            elem.parent().removeClass('multiple-select-panel-opended')
+            elem.removeClass('multiple-select-panel-opended')
           }
         }, 100);
       },
@@ -377,7 +389,6 @@ layui.define(['jquery', 'dropdown'],function(exports){
       return option.id == id;
     })[0];
   };
-
 
   // 渲染选择
   Class.prototype.renderSelection = function() {
@@ -435,5 +446,5 @@ layui.define(['jquery', 'dropdown'],function(exports){
     return thisSelect.call(inst);
   };
 
-  exports('select', select);
+  exports(MOD_NAME, select);
 });
