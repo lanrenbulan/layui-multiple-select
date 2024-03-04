@@ -332,20 +332,6 @@ layui.define(['jquery', 'dropdown'],function(exports){
         if (that.context.keyword !== '') {
           searchInput.val(that.context.keyword).focus();
         }
-
-        // 检测dropdown的面版是否已关闭
-        var i = setInterval(function() {
-          // 是否已展开
-          if (!elem.data('layui_dropdown_index_opened')) {
-            clearInterval(i);
-
-            that.context.keyword = '';
-            that.context.filteredOptions = null;
-            that.reloadDropdownData();
-
-            elem.removeClass('multiple-select-panel-opended')
-          }
-        }, 100);
       },
 
       click: function(data, elem) {
@@ -379,6 +365,15 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
         // false不关闭面板
         return false;
+      },
+
+      close: function(elem) {
+        // 面板关闭后，清空关键词搜索
+        that.context.keyword = '';
+        that.context.filteredOptions = null;
+        that.reloadDropdownData();
+
+        elem.removeClass('multiple-select-panel-opended')
       }
     });
   };
