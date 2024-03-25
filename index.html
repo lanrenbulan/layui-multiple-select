@@ -52,6 +52,9 @@
 	</form>
 
 	<input id="multi-select5" name="cities5" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
+
+	<h3>URL</h3>
+	<input id="multi-select6" name="cities6" class="layui-input" readonly lay-verify="required" placeholder="请选择" />
 </div>
 
 <script src="//unpkg.com/layui@2.9.7/dist/layui.js"></script>
@@ -62,7 +65,8 @@
 	}).extend({
 	  select: 'select'
 	});
-	layui.use(['select', 'form'], function(){
+
+	layui.use(['select', 'form'], function() {
   	const select = layui.select;
   	const form = layui.form;
   	const $ = layui.$;
@@ -98,55 +102,61 @@
 	  }
 
 	  select.render({
-	  		elem: '#multi-select4',
-	  		keywordPlaceholder: '关键词',
-	  		unfilteredText: '没有匹配的选项',
-	  		options: [
-	  			{id: 1,title: '北京', selected: false},
-	  			{id: 2,title: '上海', selected: selected},
-	  			{id: 3,title: '湖北', selected: false},
-	  			{id: 4,title: '湖南', selected: selected},
-	  			{id: 5,title: '河北', selected: false},
-	  			{id: 6,title: '山西', selected: selected},
-	  			{id: 7,title: '内蒙古', selected: false},
-	  			{id: 8,title: '西藏', selected: selected},
-	  			{id: 9,title: '台湾', selected: false},
-	  			{id: 10,title: '新疆', selected: false},
-	  			{id: 11,title: '天津', selected: false},
-	  			{id: 12,title: '山东', selected: false},
-	  			{id: 13,title: '浙江'},
-	  			{id: 14,title: '福建'},
-	  			{id: 15,title: '广西'},
-	  			{id: 16,title: '贵州'},
-	  			{id: 17,title: '四川'},
-	  		],
-	  	});
+      elem: '#multi-select4',
+      keywordPlaceholder: '关键词',
+      unfilteredText: '没有匹配的选项',
+      options: [
+        {id: 1,title: '北京', selected: false},
+        {id: 2,title: '上海', selected: selected},
+        {id: 3,title: '湖北', selected: false},
+        {id: 4,title: '湖南', selected: selected},
+        {id: 5,title: '河北', selected: false},
+        {id: 6,title: '山西', selected: selected},
+        {id: 7,title: '内蒙古', selected: false},
+        {id: 8,title: '西藏', selected: selected},
+        {id: 9,title: '台湾', selected: false},
+        {id: 10,title: '新疆', selected: false},
+        {id: 11,title: '天津', selected: false},
+        {id: 12,title: '山东', selected: false},
+        {id: 13,title: '浙江'},
+        {id: 14,title: '福建'},
+        {id: 15,title: '广西'},
+        {id: 16,title: '贵州'},
+        {id: 17,title: '四川'},
+      ],
+    });
 
 	  const select5 = select.render({
-	  		elem: '#multi-select5',
-	  		keywordPlaceholder: '关键词',
-	  		unfilteredText: '没有匹配的选项',
-	  		options: [
-	  			{id: 1,title: '北京', selected: false},
-	  			{id: 2,title: '上海', selected: selected},
-	  			{id: 3,title: '湖北', selected: false},
-	  			{id: 4,title: '湖南', selected: selected},
-	  			{id: 5,title: '河北', selected: false},
-	  			{id: 6,title: '山西', selected: selected},
-	  			{id: 7,title: '内蒙古', selected: false},
-	  			{id: 8,title: '西藏', selected: selected},
-	  			{id: 9,title: '台湾', selected: false},
-	  			{id: 10,title: '新疆', selected: false},
-	  			{id: 11,title: '天津', selected: false},
-	  			{id: 12,title: '山东', selected: false},
-	  			{id: 13,title: '浙江'},
-	  			{id: 14,title: '福建'},
-	  			{id: 15,title: '广西'},
-	  			{id: 16,title: '贵州'},
-	  			{id: 17,title: '四川'},
-	  		],
-	  	});
+      elem: '#multi-select5',
+      keywordPlaceholder: '关键词',
+      unfilteredText: '没有匹配的选项',
+      options: [
+        {id: 1,title: '北京', selected: false},
+        {id: 2,title: '上海', selected: selected},
+        {id: 3,title: '湖北', selected: false},
+        {id: 4,title: '湖南', selected: selected},
+        {id: 5,title: '河北', selected: false},
+        {id: 6,title: '山西', selected: selected},
+        {id: 7,title: '内蒙古', selected: false},
+        {id: 8,title: '西藏', selected: selected},
+        {id: 9,title: '台湾', selected: false},
+        {id: 10,title: '新疆', selected: false},
+        {id: 11,title: '天津', selected: false},
+        {id: 12,title: '山东', selected: false},
+        {id: 13,title: '浙江'},
+        {id: 14,title: '福建'},
+        {id: 15,title: '广西'},
+        {id: 16,title: '贵州'},
+        {id: 17,title: '四川'},
+      ],
+    });
 
+	  const select6 = select.render({
+  		elem: '#multi-select6',
+  		keywordPlaceholder: '关键词',
+  		unfilteredText: '没有匹配的选项',
+  		url: 'options.json'
+  	});
 
   	$('#reload').click(function() {
   		select5.reload({
@@ -156,16 +166,16 @@
   	});
 
   	 // 提交事件
-	form.on('submit(demo-verify)', function(data){
-	  var field = data.field; // 获取表单字段值
-	  // 显示填写结果，仅作演示用
-	  layer.alert(JSON.stringify(field), {
-	    title: '当前填写的字段值'
-	  });
-	  // 此处可执行 Ajax 等操作
-	  // …
-	  return false; // 阻止默认 form 跳转
-	});
+    form.on('submit(demo-verify)', function(data){
+      var field = data.field; // 获取表单字段值
+      // 显示填写结果，仅作演示用
+      layer.alert(JSON.stringify(field), {
+        title: '当前填写的字段值'
+      });
+      // 此处可执行 Ajax 等操作
+      // …
+      return false; // 阻止默认 form 跳转
+    });
 	});
 </script>
 </body>

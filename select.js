@@ -25,6 +25,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
       allowCreate: true,
       // 是否折叠已选择的选项
       collapseSelected: false,
+      parseOptions: undefined,
     }
   };
 
@@ -104,8 +105,29 @@ layui.define(['jquery', 'dropdown'],function(exports){
   Class.prototype.render = function() {
     var that = this;
 
+    if (that.config.url) {
+      $.get(that.config.url, {}, function(res) {
+        let options = [];
+        if (that.config.parseOptions) {
+          options = that.config.parseOptions(res);
+        } else {
+          options = res;
+        }
+        console.log(options);
+        that.doRender(options);
+      });
+
+      return ;
+    }
+
+    that.doRender(that.config.options);
+  };
+
+  Class.prototype.doRender = function(options) {
+    var that = this;
+
     // 初始化选项
-    var initOptions = that.config.options.map(function(option) {
+    var initOptions = options.map(function(option) {
       return {
         id: option[that.config.customName.id],
         title: option[that.config.customName.title],
@@ -149,7 +171,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
     that.renderDropdown();
     that.renderSelection();
-  };
+  }
 
   // 清空所有值
   Class.prototype.clear = function() {
@@ -176,6 +198,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
       }
 
       this.context.selectedIds.push(id);
+      console.log(this.context.selectedIds)
     }
 
     this.reloadDropdownData(this.buildRenderOptions());
@@ -430,9 +453,14 @@ layui.define(['jquery', 'dropdown'],function(exports){
   };
 
   Class.prototype.getSelectedOptions = function() {
-    return this.getAllOptions().filter(function(option) {
-      return option.selected;
-    });
+    let selectedIds = this.context.selectedIds;
+    let selectedOptions = [];
+
+    for (var i = 0; i < selectedIds.length; i++) {
+      selectedOptions.push(this.getOptionById(selectedIds[i]));
+    }
+
+    return selectedOptions;
   };
 
   //核心入口
