@@ -25,6 +25,9 @@ layui.define(['jquery', 'dropdown'],function(exports){
       allowCreate: true,
       // 是否折叠已选择的选项
       collapseSelected: false,
+      // 远程获取options的url
+      url: undefined,
+      // 通过url获取options的解析函数
       parseOptions: undefined,
     }
   };
