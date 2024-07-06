@@ -25,9 +25,6 @@ layui.define(['jquery', 'dropdown'],function(exports){
       allowCreate: true,
       // 是否折叠已选择的选项
       collapseSelected: false,
-      // 远程获取options的url
-      url: undefined,
-      // 通过url获取options的解析函数
       parseOptions: undefined,
     }
   };
@@ -109,14 +106,13 @@ layui.define(['jquery', 'dropdown'],function(exports){
     var that = this;
 
     if (that.config.url) {
-      $.get(that.config.url, {}, function(res) {
+      $.get(that.config.url, function(res) {
         let options = [];
         if (that.config.parseOptions) {
           options = that.config.parseOptions(res);
         } else {
           options = res;
         }
-        console.log(options);
         that.doRender(options);
       });
 
@@ -134,7 +130,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
       return {
         id: option[that.config.customName.id],
         title: option[that.config.customName.title],
-        selected: option[that.config.customName.selected],
+        selected: option[that.config.customName.selected] || false,
       };
     });
 
@@ -179,13 +175,13 @@ layui.define(['jquery', 'dropdown'],function(exports){
   // 清空所有值
   Class.prototype.clear = function() {
     this.context.selectedIds = [];
-    this.reloadDropdownData(this.buildRenderOptions());
+    this.reloadDropdown(this.buildRenderOptions());
   };
 
   // 移除选项
   Class.prototype.remove = function(option) {
     this.context.selectedIds = this.context.selectedIds.filter(function(id) { return id != option.id; });
-    this.reloadDropdownData(this.buildRenderOptions());
+    this.reloadDropdown(this.buildRenderOptions());
   };
 
   // 选择选项
@@ -201,10 +197,9 @@ layui.define(['jquery', 'dropdown'],function(exports){
       }
 
       this.context.selectedIds.push(id);
-      console.log(this.context.selectedIds)
     }
 
-    this.reloadDropdownData(this.buildRenderOptions());
+    this.reloadDropdown(this.buildRenderOptions());
   };
 
   // 重置搜索
@@ -281,7 +276,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
     ].join('');
   };
 
-  Class.prototype.reloadDropdownData = function(options) {
+  Class.prototype.reloadDropdown = function(options) {
     if (options && options.length === this.getAllOptions().length) {
       this.resetSearch();
     }
@@ -305,6 +300,11 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
   Class.prototype.renderDropdown = function() {
     var that = this;
+
+    if (that.dropdown) {
+      that.reloadDropdown();
+      return ;
+    }
 
     that.dropdown = dropdown.render({
       elem: that.config.elem.parent(),
@@ -336,7 +336,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
 
           that.context.keyword = keyword;
           that.context.filteredOptions = filterOptions;
-          that.reloadDropdownData(that.context.filteredOptions);
+          that.reloadDropdown(that.context.filteredOptions);
         }
 
         // 搜索框事件
@@ -397,7 +397,7 @@ layui.define(['jquery', 'dropdown'],function(exports){
         // 面板关闭后，清空关键词搜索
         that.context.keyword = '';
         that.context.filteredOptions = null;
-        that.reloadDropdownData();
+        that.reloadDropdown();
 
         elem.removeClass('multiple-select-panel-opended')
       }
